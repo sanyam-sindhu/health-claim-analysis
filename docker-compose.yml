@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: claims_user
+      POSTGRES_PASSWORD: claims_pass
+      POSTGRES_DB: claims_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U claims_user -d claims_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    environment:
+      DATABASE_URL: "postgres://claims_user:claims_pass@postgres:5432/claims_db"
+      POOL_MODE: transaction
+      MAX_CLIENT_CONN: 200
+      DEFAULT_POOL_SIZE: 20
+      AUTH_TYPE: plain
+      AUTH_USER: claims_user
+      AUTH_PASSWORD: claims_pass
+    ports:
+      - "5433:5432"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:

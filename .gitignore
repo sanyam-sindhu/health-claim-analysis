@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
+
+# Environment
+backend/.env
+.env
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Docker volumes
+pgdata/
+
+# Claude Code
+.claude/
+
+# Test artifacts
+*.b64
+test_vision_claim.py
+test_prescription.b64
